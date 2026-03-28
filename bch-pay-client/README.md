@@ -94,6 +94,7 @@ Incluimos agentes funcionando en `/examples/`:
 | **Image Generation** | Generación de imágenes por pago | `python examples/agent_image_gen.py` |
 | **LLM API** | API compatible OpenAI con balance prepago | `python examples/agent_llm_api.py` |
 | **Stablecoin (MUSD)** | Pagos en USD estables via CashToken | `python examples/agent_token_demo.py` |
+| **QA Venture** | Suite completa de pruebas automatizadas (12 categorías) | `python examples/agent_venture_qa.py --backend demo --report markdown` |
 
 Todos los agentes son **autónomos**: pueden ejecutarse como servicios independientes, gestionando sus propios wallets, facturas y verificación de pagos.
 
@@ -107,6 +108,7 @@ Todos los agentes son **autónomos**: pueden ejecutarse como servicios independi
 - [API Reference](docs/api.md) - Referencia completa de BCHPay class
 - [Integration Guides](docs/) - FastAPI, Discord, Telegram, Webhooks
 - [CashToken Support](docs/tokens.md) - Guía completa de tokens (MUSD, SLP)
+- [QA & Testing](docs/qa.md) - Suite de pruebas automatizadas (Venture Agent)
 - [Troubleshooting](docs/troubleshooting.md) - Soluciones comunes
 - [Contributing](CONTRIBUTING.md) - Cómo contribuir, badges, code of conduct
 - [Roadmap](ROADMAP.md) - Lo que viene
