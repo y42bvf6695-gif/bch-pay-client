@@ -8,6 +8,50 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- **Venture QA Agent** - Comprehensive automated testing suite
+  - New agent: `examples/agent_venture_qa.py`
+  - 12 test categories: Rhythm, Feed, Desk, Glove, Attack, Sing, Blur, Pig, Pass, Runway, Cattle, Venture
+  - Tests cover: workflow patterns, input validation, storage paths, error handling, concurrency, listing, metadata edge cases, large payloads, happy paths, serialization, batch operations, token operations
+  - Report outputs: text, JSON, markdown (suitable for CI/CD)
+  - Self-contained: runs against any backend (demo/paytaca)
+- `BCHPay.get_balance(token_category=None)` fully implemented across backends
+- `BCHPay.send_payment()` now accepts `token_category` for token transfers
+- `PaytacaBackend.list_tokens()` - enumerate fungible tokens in wallet
+- `PaytacaBackend` token operations: `receive --token`, `history --token`, `token send`, `token list`
+- `DemoBackend` now supports `token_category` parameter (compatibility)
+- New documentation: `docs/qa.md` - QA agent usage, categories, CI integration
+- New documentation: `docs/tokens.md` - CashToken support (MUSD, SLP)
+
+### Changed
+- Backend `create_invoice` signature: `(amount, description, metadata=None, token_category=None)`
+- Backend `get_balance` signature: `(token_category=None)` - accepts optional token
+- Backend `list_tokens()` added to abstract interface
+- DemoBackend: token operations return 0/[] (compatible but not functional)
+- Default storage path changed from `~/.bch_pay.json` to `~/.bch_pay_client.json` (clarifies ownership)
+  - **Note**: Old storage files remain compatible; new invoices append to existing JSON
+
+### Docs
+- README: added QA Venture agent to agents table
+- README: added QA & Testing link in documentation section
+- README: keywords expanded (qa, testing)
+- CHANGELOG reorganized with clear separation between minor releases
+
+---
+
+## [0.2.2-alpha] - Upcoming
+
+### Added
+- Venture QA agent with 12 test categories
+- Full token support across all backends
+- list_tokens() method for wallet token enumeration
+- Token-aware operations in PaytacaBackend
+- Comprehensive QA documentation
+
+---
+
+## [0.2.1-alpha] - 2026-03-28
+
+### Added
 - Full CashToken support (MUSD, SLP tokens)
   - `BCHPay.create_invoice(token_category=...)` for token invoices
   - `BCHPay.get_balance(token_category=...)` for token balances
@@ -30,19 +74,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - README: updated agents table linking to token demo
 - README: added token support note in agents description
 - CHANGELOG reorganized with separate entries for 0.2.0 and 0.2.1
-
----
-
-## [0.2.1-alpha] - Upcoming
-
-### Added
-- Modular backend infrastructure
-- Paytaca CLI backend (experimental)
-- Backend auto-detection
-- Support for CashTokens (fungible tokens)
-- Token operations: create_invoice with token_category, get_balance(token_category), list_tokens, send_payment with token_category
-- New demo agent: agent_token_demo.py
-- Comprehensive token documentation (docs/tokens.md)
 
 ---
 
@@ -99,7 +130,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Dashboard web UI
 - Official Docker images
 
-[Unreleased]: https://github.com/y42bvf6695-gif/bch-pay-client/compare/v0.2.1-alpha...HEAD
+[Unreleased]: https://github.com/y42bvf6695-gif/bch-pay-client/compare/v0.2.2-alpha...HEAD
+[0.2.2-alpha]: https://github.com/y42bvf6695-gif/bch-pay-client/compare/v0.2.1-alpha...HEAD
 [0.2.1-alpha]: https://github.com/y42bvf6695-gif/bch-pay-client/compare/v0.2.0-alpha...HEAD
 [0.2.0-alpha]: https://github.com/y42bvf6695-gif/bch-pay-client/compare/v0.1.0...HEAD
 [0.1.0]: https://github.com/y42bvf6695-gif/bch-pay-client/releases/tag/v0.1.0
