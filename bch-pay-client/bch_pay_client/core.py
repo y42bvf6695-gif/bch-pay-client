@@ -9,7 +9,7 @@ import json
 import uuid
 import time
 from pathlib import Path
-from typing import Optional, Dict, Any
+from typing import Optional, Dict, Any, List
 
 from .exceptions import BCHPayError, InsufficientAmount
 from .backends import BCHBackend, DemoBackend, Invoice, PaytacaBackend
@@ -130,15 +130,17 @@ class BCHPay:
         self,
         amount: float,
         description: str,
-        metadata: Optional[Dict[str, Any]] = None
+        metadata: Optional[Dict[str, Any]] = None,
+        token_category: Optional[str] = None
     ) -> Invoice:
         """
-        Crea una nueva factura de pago.
+        Crea una nueva factura de pago (BCH o token).
 
         Args:
-            amount: Cantidad en BCH (ej: 0.01)
+            amount: Cantidad en BCH o unidades de token
             description: Descripción del pago
             metadata: Datos adicionales opcionales
+            token_category: ID de categoría CashToken (64 hex chars). Si se omite, es BCH.
 
         Returns:
             Invoice: Objeto de factura creada
@@ -150,9 +152,11 @@ class BCHPay:
             raise InsufficientAmount("El monto debe ser mayor a 0")
 
         try:
-            invoice = self.backend.create_invoice(amount, description, metadata)
+            invoice = self.backend.create_invoice(
+                amount, description, metadata, token_category
+            )
 
-            # Cache invoice locally (backend might not store all metadata)
+            # Cache invoice locally
             self._invoices[invoice.id] = invoice.to_dict()
             self._save()
 
@@ -212,17 +216,40 @@ class BCHPay:
         except Exception as e:
             raise BCHPayError(f"Failed to check payment: {str(e)}")
 
-    def get_balance(self) -> float:
+    def get_balance(self, token_category: Optional[str] = None) -> float:
         """
-        Obtiene el balance del wallet (backend dependiente).
+        Obtiene el balance del wallet.
 
-        Para demo backend: calcula desde facturas pagadas.
-        Para paytaca backend: consulta el wallet real.
+        Args:
+            token_category: Si se especifica, devuelve balance de ese token.
+                          Si None, devuelve balance BCH.
+
+        Returns:
+            float: Balance en BCH o unidades de token
         """
         try:
+            # Backends nuevos soportan token_category
+            return self.backend.get_balance(token_category=token_category)
+        except TypeError:
+            # Backend antiguo sin soporte token_category
+            if token_category:
+                return 0.0
             return self.backend.get_balance()
         except Exception as e:
             raise BCHPayError(f"Failed to get balance: {str(e)}")
+
+    def list_tokens(self) -> List[Dict[str, Any]]:
+        """
+        Lista todos los CashTokens en el wallet.
+
+        Returns:
+            Lista de dicts con: category, symbol, name, decimals, balance
+        """
+        try:
+            return self.backend.list_tokens()
+        except AttributeError:
+            # Backend no soporta tokens
+            return []
 
     def list_invoices(self, limit: int = 100) -> list[Invoice]:
         """Lista todas las facturas (últimas primero)."""

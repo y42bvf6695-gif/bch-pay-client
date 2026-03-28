@@ -1,13 +1,13 @@
 [tool.poetry]
 name = "bch-pay-client"
-version = "0.2.0-alpha"
+version = "0.2.1-alpha"
 description = "Bitcoin Cash payment client for AI agents"
 authors = ["BCH x IA Team <team@bch-ia.org>"]
 license = "MIT"
 readme = "README.md"
 homepage = "https://github.com/y42bvf6695-gif/bch-pay-client"
 repository = "https://github.com/y42bvf6695-gif/bch-pay-client"
-keywords = ["bitcoin-cash", "bch", "payments", "ai-agents", "blockchain"]
+keywords = ["bitcoin-cash", "bch", "payments", "ai-agents", "blockchain", "cashtoken", "musd"]
 classifiers = [
     "Development Status :: 3 - Alpha",
     "Intended Audience :: Developers",

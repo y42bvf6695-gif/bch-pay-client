@@ -58,9 +58,10 @@ class DemoBackend(BCHBackend):
         self,
         amount: float,
         description: str,
-        metadata: Optional[Dict[str, Any]] = None
+        metadata: Optional[Dict[str, Any]] = None,
+        token_category: Optional[str] = None
     ) -> Invoice:
-        """Create a new invoice."""
+        """Create a new invoice (demo ignores token_category)."""
         if amount <= 0:
             raise ValueError("Amount must be greater than 0")
 
@@ -109,8 +110,13 @@ class DemoBackend(BCHBackend):
 
         return False
 
-    def get_balance(self) -> float:
-        """Calculate total earned from paid invoices."""
+    def get_balance(self, token_category: Optional[str] = None) -> float:
+        """
+        Get balance. In demo, returns sum of paid invoices for BCH,
+        or 0 for tokens (since demo doesn't simulate token balances).
+        """
+        if token_category:
+            return 0.0
         return sum(
             inv.amount for inv in self.list_invoices()
             if inv.paid
@@ -120,6 +126,10 @@ class DemoBackend(BCHBackend):
         """List all invoices, newest first."""
         invoices = [Invoice(**data) for data in self._invoices.values()]
         return sorted(invoices, key=lambda x: x.created_at, reverse=True)[:limit]
+
+    def list_tokens(self) -> List[Dict[str, Any]]:
+        """Demo has no tokens."""
+        return []
 
     def send_payment(
         self,

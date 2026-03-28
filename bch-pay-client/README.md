@@ -70,6 +70,9 @@ if pay.check_payment(invoice.id):
 | **GPU/CPU Rental** | 0.001-0.05 BCH / hora | Alquiler de recursos de cómputo |
 | **Image Generation** | 0.001-0.005 BCH / imagen | Stable Diffusion, DALL-E, etc. |
 | **Compute Rental** | Por tokens/s | Cómputo genérico (inferencia, transcodificación) |
+| **Stablecoin (MUSD) Payments** | $X.XX USD | Precios estables en dólares sin bancos |
+
+**Todos los agentes soportan BCH nativo y CashTokens (MUSD, SLP tokens)**
 
 ---
 
@@ -90,6 +93,7 @@ Incluimos agentes funcionando en `/examples/`:
 | **Compute Rental** | Alquiler de cómputo por tokens/s | `python examples/agent_compute_rental.py` |
 | **Image Generation** | Generación de imágenes por pago | `python examples/agent_image_gen.py` |
 | **LLM API** | API compatible OpenAI con balance prepago | `python examples/agent_llm_api.py` |
+| **Stablecoin (MUSD)** | Pagos en USD estables via CashToken | `python examples/agent_token_demo.py` |
 
 Todos los agentes son **autónomos**: pueden ejecutarse como servicios independientes, gestionando sus propios wallets, facturas y verificación de pagos.
 
@@ -102,6 +106,7 @@ Todos los agentes son **autónomos**: pueden ejecutarse como servicios independi
 - [Quickstart](docs/quickstart.md) - Guía detallada paso a paso
 - [API Reference](docs/api.md) - Referencia completa de BCHPay class
 - [Integration Guides](docs/) - FastAPI, Discord, Telegram, Webhooks
+- [CashToken Support](docs/tokens.md) - Guía completa de tokens (MUSD, SLP)
 - [Troubleshooting](docs/troubleshooting.md) - Soluciones comunes
 - [Contributing](CONTRIBUTING.md) - Cómo contribuir, badges, code of conduct
 - [Roadmap](ROADMAP.md) - Lo que viene
@@ -181,17 +186,17 @@ pay = BCHPay(
 
 Backend directo vía API REST (sin Node.js). Usará `watchtower-cash-py` o httpx.
 
-### Hybrid Mode
+### Paytaca Integration
+
+For detailed setup guide, see [docs/paytaca.md](docs/paytaca.md).
 
 ```python
-# Auto-detecta: si paytaca está instalado, lo usa; si no, demo
-pay = BCHPay()  # autodetect
+from bch_pay_client import BCHPay
+
+pay = BCHPay(backend='paytaca', network='testnet')
 ```
 
-Puedes forzar el backend demo:
-```python
-pay = BCHPay(backend='demo')
-```
+**Note:** Paytaca backend is experimental. Requires Node.js 20+ and `paytaca-cli`. See documentation for limitations.
 
 ---
 

@@ -55,9 +55,10 @@ class BCHBackend(ABC):
         self,
         amount: float,
         description: str,
-        metadata: Optional[Dict[str, Any]] = None
+        metadata: Optional[Dict[str, Any]] = None,
+        token_category: Optional[str] = None
     ) -> Invoice:
-        """Create a new payment invoice."""
+        """Create a new payment invoice (BCH or token)."""
         pass
 
     @abstractmethod
@@ -71,13 +72,18 @@ class BCHBackend(ABC):
         pass
 
     @abstractmethod
-    def get_balance(self) -> float:
-        """Get total balance (paid invoices or wallet balance)."""
+    def get_balance(self, token_category: Optional[str] = None) -> float:
+        """Get wallet balance (BCH or specific token)."""
         pass
 
     @abstractmethod
     def list_invoices(self, limit: int = 100) -> List[Invoice]:
         """List all invoices."""
+        pass
+
+    @abstractmethod
+    def list_tokens(self) -> List[Dict[str, Any]]:
+        """List all CashTokens in wallet (symbol, category, balance, decimals)."""
         pass
 
     def send_payment(
