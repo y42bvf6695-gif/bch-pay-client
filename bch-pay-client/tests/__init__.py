@@ -1,0 +1,1 @@
+# Tests para bch-pay-client

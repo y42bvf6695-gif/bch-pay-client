@@ -1,0 +1,39 @@
+[tool.poetry]
+name = "bch-pay-client"
+version = "0.1.0"
+description = "Bitcoin Cash payment client for AI agents"
+authors = ["BCH x IA Team <team@bch-ia.org>"]
+license = "MIT"
+readme = "README.md"
+homepage = "https://github.com/bch-ia/bch-pay-client"
+repository = "https://github.com/bch-ia/bch-pay-client"
+keywords = ["bitcoin-cash", "bch", "payments", "ai-agents", "blockchain"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+]
+packages = [{include = "bch_pay_client"}]
+
+[tool.poetry.dependencies]
+python = "^3.9"
+requests = "^2.31"
+qrcode = {version = "^7.4", optional = true}
+pillow = {version = "^10.0", optional = true}
+flask = {version = "^3.0", optional = true}
+fastapi = {version = "^0.104", optional = true}
+uvicorn = {version = "^0.24", optional = true}
+
+[tool.poetry.extras]
+qr = ["qrcode", "pillow"]
+web = ["flask", "fastapi", "uvicorn"]
+all = ["qrcode", "pillow", "flask", "fastapi", "uvicorn"]
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

@@ -1,0 +1,24 @@
+version: '3.8'
+
+services:
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: python examples/agent_api.py
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./data:/data
+      - ./.env:/app/.env:ro
+    environment:
+      - BCH_NETWORK=${BCH_NETWORK:-testnet}
+      - BCH_STORAGE_PATH=/data/bch_pay.json
+      - BCHPAY_HOST=0.0.0.0
+      - BCHPAY_PORT=8000
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
