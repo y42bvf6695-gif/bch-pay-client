@@ -156,6 +156,37 @@ black --check bch_pay_client/
 
 ---
 
+## 🚀 Deployment & Automation
+
+### Publicar nueva versión
+
+1. **Actualizar versión** en `pyproject.toml` (ej: `0.1.1` o `0.2.0-beta`)
+2. **Commit y tag:**
+   ```bash
+   git add .
+   git commit -m "Release v0.1.1"
+   git tag -a v0.1.1 -m "Release v0.1.1"
+   git push origin main --tags
+   ```
+3. **GitHub Actions** automáticamente:
+   - Build del paquete
+   - Publica en PyPI
+   - Crea GitHub Release
+
+### Configurar PyPI auto-deploy (una sola vez)
+
+1. Ve a https://pypi.org/manage/account/token/
+2. Crea API token con scope `Entire account`
+3. En GitHub repo → Settings → Secrets and variables → Actions
+4. Click "New repository secret"
+   - Name: `PYPI_API_TOKEN`
+   - Value: pega el token (empieza con `pypi-`)
+5. Guardar
+
+Ahora cada tag `v*` se publica automáticamente.
+
+---
+
 ## 🤝 Contribuir
 
 ¡Contribuciones bienvenidas! Lee [CONTRIBUTING.md](CONTRIBUTING.md).
