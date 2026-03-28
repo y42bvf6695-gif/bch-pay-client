@@ -96,6 +96,7 @@ Incluimos agentes funcionando en `/examples/`:
 | **Stablecoin (MUSD)** | Pagos en USD estables via CashToken | `python examples/agent_token_demo.py` |
 | **QA Venture** | Suite completa de pruebas automatizadas (12 categorías) | `python examples/agent_venture_qa.py --backend demo --report markdown` |
 | **Send Mainnet** | Enviar BCH en mainnet via Paytaca (manual seguro) | `python examples/send_mainnet.py --amount 0.00242019 --address bitcoincash:qz...` |
+| **BCH Trading** | Bot de Telegram con agente experto en trading BCH | `TELEGRAM_BOT_TOKEN=<token> python examples/agent_telegram_trading.py` |
 
 ---
 
@@ -113,6 +114,7 @@ Todos los agentes son **autónomos**: pueden ejecutarse como servicios independi
 - [API Reference](docs/api.md) - Referencia completa de BCHPay class
 - [Integration Guides](docs/) - FastAPI, Discord, Telegram, Webhooks
 - [CashToken Support](docs/tokens.md) - Guía completa de tokens (MUSD, SLP)
+- [BCH Trading Advisor](docs/trading.md) - Agente de trading técnico + Telegram bot
 - [QA & Testing](docs/qa.md) - Suite de pruebas automatizadas (Venture Agent)
 - [Sending Mainnet](docs/send-mainnet.md) - Script seguro para envíos BCH en mainnet
 - [Troubleshooting](docs/troubleshooting.md) - Soluciones comunes
