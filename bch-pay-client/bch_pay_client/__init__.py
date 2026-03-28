@@ -6,7 +6,7 @@ from .core import BCHPay
 from .backends.base import Invoice, Payment
 from .exceptions import BCHPayError, InsufficientAmount, InvalidAddress, PaymentNotFound
 
-__version__ = "0.2.2-alpha"
+__version__ = "0.2.3-alpha"
 __all__ = [
     "BCHPay",
     "Invoice",

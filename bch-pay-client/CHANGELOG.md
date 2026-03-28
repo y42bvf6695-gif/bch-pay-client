@@ -14,13 +14,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Tests cover: workflow patterns, input validation, storage paths, error handling, concurrency, listing, metadata edge cases, large payloads, happy paths, serialization, batch operations, token operations
   - Report outputs: text, JSON, markdown (suitable for CI/CD)
   - Self-contained: runs against any backend (demo/paytaca)
+- `--real-send` option to QA agent for optional mainnet BCH transfers
+  - Requires `--backend paytaca`, `--network mainnet`, `--address`, `--amount`
+  - Explicit confirmation (type 'REAL') prevents accidental transfers
+  - Use case: integration testing with real funds on testing wallets
 - `BCHPay.get_balance(token_category=None)` fully implemented across backends
 - `BCHPay.send_payment()` now accepts `token_category` for token transfers
 - `PaytacaBackend.list_tokens()` - enumerate fungible tokens in wallet
 - `PaytacaBackend` token operations: `receive --token`, `history --token`, `token send`, `token list`
 - `DemoBackend` now supports `token_category` parameter (compatibility)
 - New documentation: `docs/qa.md` - QA agent usage, categories, CI integration
+- New documentation: `docs/send-mainnet.md` - Safe mainnet transfers guide
 - New documentation: `docs/tokens.md` - CashToken support (MUSD, SLP)
+- `examples/send_mainnet.py` - Standalone script for manual mainnet BCH sends via Paytaca
 
 ### Changed
 - Backend `create_invoice` signature: `(amount, description, metadata=None, token_category=None)`
@@ -130,7 +136,27 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Dashboard web UI
 - Official Docker images
 
-[Unreleased]: https://github.com/y42bvf6695-gif/bch-pay-client/compare/v0.2.2-alpha...HEAD
+## [0.2.3-alpha] - 2026-03-28
+
+### Added
+- **Venture QA Agent** - Comprehensive automated testing suite
+  - New agent: `examples/agent_venture_qa.py`
+  - 12 test categories based on seed words
+  - Optional `--real-send` for mainnet BCH transfers with explicit confirmation
+- `examples/send_mainnet.py` - Standalone script for manual mainnet transfers
+- `docs/send-mainnet.md` - Guide for safe mainnet usage
+- QA agent documentation (`docs/qa.md`) with usage examples and real-send instructions
+
+### Changed
+- QA agent now supports `--real-send` flag for optional real BCH transfers
+- All version strings bumped to 0.2.3-alpha
+
+### Fixed
+- Minor documentation improvements and badge URL corrections
+
+---
+
+[Unreleased]: https://github.com/y42bvf6695-gif/bch-pay-client/compare/v0.2.3-alpha...HEAD
 [0.2.2-alpha]: https://github.com/y42bvf6695-gif/bch-pay-client/compare/v0.2.1-alpha...HEAD
 [0.2.1-alpha]: https://github.com/y42bvf6695-gif/bch-pay-client/compare/v0.2.0-alpha...HEAD
 [0.2.0-alpha]: https://github.com/y42bvf6695-gif/bch-pay-client/compare/v0.1.0...HEAD
