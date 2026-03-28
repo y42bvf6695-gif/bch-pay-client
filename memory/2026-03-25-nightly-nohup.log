@@ -1,0 +1,4 @@
+  File "/home/open/.openclaw/workspace/memory/2026-03-25-nightly-improve.py", line 62
+    line = {
+           ^
+SyntaxError: '{' was never closed

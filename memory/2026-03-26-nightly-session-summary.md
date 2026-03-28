@@ -1,0 +1,64 @@
+Time: 2026-03-26T05:31:19
+Improvements:
+- - Revisa MEMORY.md i actualitza categories: idioma (Català), zona horària, format de data.
+- - Crea un resum nocturn (session-nightly) amb temes i properes accions.
+- - Implementa compressió de context en prompts (estalvi de tokens).
+- - Activa descomposició de tasques per a tasques complexes.
+- - Revisió interna (tick 0): detectar fallades i registrar-ho.
+
+Time: 2026-03-26T05:46:19
+Improvements:
+- - Revisa MEMORY.md i actualitza categories: idioma (Català), zona horària, format de data.
+- - Crea un resum nocturn (session-nightly) amb temes i properes accions.
+- - Implementa compressió de context en prompts (estalvi de tokens).
+- - Activa descomposició de tasques per a tasques complexes.
+- - Revisió interna (tick 1): detectar fallades i registrar-ho.
+
+Time: 2026-03-26T06:01:19
+Improvements:
+- - Revisa MEMORY.md i actualitza categories: idioma (Català), zona horària, format de data.
+- - Crea un resum nocturn (session-nightly) amb temes i properes accions.
+- - Implementa compressió de context en prompts (estalvi de tokens).
+- - Activa descomposició de tasques per a tasques complexes.
+- - Revisió interna (tick 2): detectar fallades i registrar-ho.
+
+Time: 2026-03-26T06:16:19
+Improvements:
+- - Revisa MEMORY.md i actualitza categories: idioma (Català), zona horària, format de data.
+- - Crea un resum nocturn (session-nightly) amb temes i properes accions.
+- - Implementa compressió de context en prompts (estalvi de tokens).
+- - Activa descomposició de tasques per a tasques complexes.
+- - Revisió interna (tick 3): detectar fallades i registrar-ho.
+
+Time: 2026-03-26T06:31:19
+Improvements:
+- - Revisa MEMORY.md i actualitza categories: idioma (Català), zona horària, format de data.
+- - Crea un resum nocturn (session-nightly) amb temes i properes accions.
+- - Implementa compressió de context en prompts (estalvi de tokens).
+- - Activa descomposició de tasques per a tasques complexes.
+- - Revisió interna (tick 4): detectar fallades i registrar-ho.
+
+Time: 2026-03-26T06:46:19
+Improvements:
+- - Revisa MEMORY.md i actualitza categories: idioma (Català), zona horària, format de data.
+- - Crea un resum nocturn (session-nightly) amb temes i properes accions.
+- - Implementa compressió de context en prompts (estalvi de tokens).
+- - Activa descomposició de tasques per a tasques complexes.
+- - Revisió interna (tick 5): detectar fallades i registrar-ho.
+
+Time: 2026-03-26T07:01:19
+Improvements:
+- - Revisa MEMORY.md i actualitza categories: idioma (Català), zona horària, format de data.
+- - Crea un resum nocturn (session-nightly) amb temes i properes accions.
+- - Implementa compressió de context en prompts (estalvi de tokens).
+- - Activa descomposició de tasques per a tasques complexes.
+- - Revisió interna (tick 6): detectar fallades i registrar-ho.
+
+Time: 2026-03-26T07:16:19
+Improvements:
+- - Revisa MEMORY.md i actualitza categories: idioma (Català), zona horària, format de data.
+- - Crea un resum nocturn (session-nightly) amb temes i properes accions.
+- - Implementa compressió de context en prompts (estalvi de tokens).
+- - Activa descomposició de tasques per a tasques complexes.
+- - Revisió interna (tick 7): detectar fallades i registrar-ho.
+
