@@ -65,5 +65,5 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - Storage backend options (SQLite, PostgreSQL)
 
-[Unreleased]: https://github.com/bch-ia/bch-pay-client/compare/v0.1.0...HEAD
-[0.1.0]: https://github.com/bch-ia/bch-pay-client/releases/tag/v0.1.0
+[Unreleased]: https://github.com/y42bvf6695-gif/bch-pay-client/compare/v0.1.0...HEAD
+[0.1.0]: https://github.com/y42bvf6695-gif/bch-pay-client/releases/tag/v0.1.0

@@ -27,6 +27,8 @@ pay = BCHPay(network=os.getenv("BCH_NETWORK", "testnet"))
 def run_api():
     """Ejecuta la API FastAPI."""
     print("🚀 Iniciando API en puerto 8000...")
+    # Cambiar al directorio de ejemplos para que los imports funcionen
+    os.chdir(os.path.dirname(os.path.abspath(__file__)))
     uvicorn.run(
         "agent_api:app",
         host="0.0.0.0",
@@ -43,6 +45,8 @@ def run_discord():
         return
 
     print("🤖 Iniciando bot Discord...")
+    # Cambiar al directorio de ejemplos
+    os.chdir(os.path.dirname(os.path.abspath(__file__)))
     import subprocess
     subprocess.run([sys.executable, "agent_discord.py"])
 
@@ -55,6 +59,8 @@ def run_telegram():
         return
 
     print("📱 Iniciando bot Telegram...")
+    # Cambiar al directorio de ejemplos
+    os.chdir(os.path.dirname(os.path.abspath(__file__)))
     import subprocess
     subprocess.run([sys.executable, "agent_telegram.py"])
 

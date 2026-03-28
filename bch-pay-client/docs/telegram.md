@@ -220,4 +220,4 @@ Best practices:
 - Notifica admin en pagos grandes (>0.1 BCH)
 - Rate limiting: max 5 invoices/hora por user
 
-Para soporte: [GitHub Issues](https://github.com/bch-ia/bch-pay-client/issues)
+Para soporte: [GitHub Issues](https://github.com/y42bvf6695-gif/bch-pay-client/issues)

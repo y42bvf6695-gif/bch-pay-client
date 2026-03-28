@@ -14,7 +14,7 @@
 Instead, please report to:
 
 - Email: security@bch-ia.org (encrypted with PGP if possible)
-- Or create a private security advisory on GitHub: https://github.com/bch-ia/bch-pay-client/security
+- Or create a private security advisory on GitHub: https://github.com/y42bvf6695-gif/bch-pay-client/security
 
 Include:
 - Detailed description

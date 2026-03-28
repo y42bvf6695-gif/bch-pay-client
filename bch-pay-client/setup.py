@@ -40,11 +40,11 @@ setup(
     description="Bitcoin Cash payment client for AI agents",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="https://github.com/bch-ia/bch-pay-client",
+    url="https://github.com/y42bvf6695-gif/bch-pay-client",
     project_urls={
-        "Bug Tracker": "https://github.com/bch-ia/bch-pay-client/issues",
-        "Documentation": "https://github.com/bch-ia/bch-pay-client/docs",
-        "Source Code": "https://github.com/bch-ia/bch-pay-client",
+        "Bug Tracker": "https://github.com/y42bvf6695-gif/bch-pay-client/issues",
+        "Documentation": "https://github.com/y42bvf6695-gif/bch-pay-client/docs",
+        "Source Code": "https://github.com/y42bvf6695-gif/bch-pay-client",
     },
     packages=find_packages(exclude=["examples", "tests", "docs"]),
     classifiers=[

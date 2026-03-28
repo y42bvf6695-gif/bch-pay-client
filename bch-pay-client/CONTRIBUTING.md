@@ -82,7 +82,7 @@ Badges están en `/badges/` como SVG. ¡Úsalas en tu README!
 
 ```bash
 # Clonar y entorno virtual
-git clone https://github.com/bch-ia/bch-pay-client.git
+git clone https://github.com/y42bvf6695-gif/bch-pay-client.git
 cd bch-pay-client
 python -m venv venv
 source venv/bin/activate  # Linux/Mac

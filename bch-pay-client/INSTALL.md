@@ -8,7 +8,7 @@
 ## Método 1: Poetry (Recomendado)
 
 ```bash
-git clone https://github.com/bch-ia/bch-pay-client.git
+git clone https://github.com/y42bvf6695-gif/bch-pay-client.git
 cd bch-pay-client
 
 poetry install --all-extras  # instala todas las dependencias
@@ -18,7 +18,7 @@ poetry shell  # activa venv
 ## Método 2: pip + venv
 
 ```bash
-git clone https://github.com/bch-ia/bch-pay-client.git
+git clone https://github.com/y42bvf6695-gif/bch-pay-client.git
 cd bch-pay-client
 python -m venv venv
 

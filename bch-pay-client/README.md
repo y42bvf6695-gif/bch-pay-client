@@ -1,4 +1,4 @@
-![Pionero BCH-IA](https://raw.githubusercontent.com/bch-ia/bch-ia-badges/main/badges/pionero-bch-ia.svg)
+![Pionero BCH-IA](https://raw.githubusercontent.com/y42bvf6695-gif/bch-pay-client/main/badges/pionero-bch-ia.svg)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![PyPI version](https://badge.fury.io/py/bch-pay-client.svg)](https://badge.fury.io/py/bch-pay-client)
 [![Python 3.9+](https://img.shields.io/badge/python-3.9+-blue.svg)](https://www.python.org/downloads/)
@@ -28,7 +28,7 @@ pip install bch-pay-client
 pip install bch-pay-client[all]
 
 # Desarrollo (también funciona con poetry)
-git clone https://github.com/bch-ia/bch-pay-client.git
+git clone https://github.com/y42bvf6695-gif/bch-pay-client.git
 cd bch-pay-client
 pip install -e ".[all]"
 ```
@@ -195,7 +195,7 @@ Ahora cada tag `v*` se publica automáticamente.
 
 | Contributor | Badge | PRs | Tipo |
 |-------------|-------|-----|------|
-| @tun编 | ![Pionero](https://raw.githubusercontent.com/bch-ia/bch-ia-badges/main/badges/pionero-bch-ia.svg) | 1 | Librería base |
+| @tun编 | ![Pionero](https://raw.githubusercontent.com/y42bvf6695-gif/bch-pay-client/main/badges/pionero-bch-ia.svg) | 1 | Librería base |
 
 > ¿Quieres aparecer aquí? Haz tu primer PR!
 
@@ -209,7 +209,7 @@ MIT - ver [LICENSE](LICENSE) detalles.
 
 ## 💬 Contacto
 
-- **Issues**: [GitHub Issues](https://github.com/bch-ia/bch-pay-client/issues)
+- **Issues**: [GitHub Issues](https://github.com/y42bvf6695-gif/bch-pay-client/issues)
 - **Discord**: `#bch-pay-client` en [Discord BCH](https://discord.gg/bch)
 - **Twitter**: [@bch_ia](https://twitter.com/bch_ia)
 
