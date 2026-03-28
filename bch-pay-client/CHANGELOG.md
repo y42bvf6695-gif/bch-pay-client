@@ -29,11 +29,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [0.2.0-alpha] - Upcoming
+
+### Added
+- Modular backend infrastructure
+- Paytaca CLI backend (experimental)
+- Backend auto-detection
+
+---
+
 ## [0.1.0] - 2026-03-28
 
 ### Added
 - Core `BCHPay` class with JSON storage
-- Demo mode with simulated payment verification (auto-approve)
+- Demo mode with simulated payment verification (auto-approve after 5s)
 - QR code generation (optional `qrcode` + `pillow`)
 - Webhook support with background processing (FastAPI agent)
 - 12 pre-built autonomous agents:
@@ -41,7 +50,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Discord bot (discord.py)
   - Telegram bot (python-telegram-bot)
   - CLI interactive
-  - Hybrid (API + bots)
+  - Hybrid (API + Discord + Telegram)
   - Fine-tuning as a Service
   - Dataset Marketplace
   - GPU Rental
@@ -67,4 +76,5 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Official Docker images
 
 [Unreleased]: https://github.com/y42bvf6695-gif/bch-pay-client/compare/v0.1.0...HEAD
+[0.2.0-alpha]: https://github.com/y42bvf6695-gif/bch-pay-client/compare/v0.1.0...HEAD
 [0.1.0]: https://github.com/y42bvf6695-gif/bch-pay-client/releases/tag/v0.1.0

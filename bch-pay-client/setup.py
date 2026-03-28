@@ -34,7 +34,7 @@ extras_require = {
 
 setup(
     name="bch-pay-client",
-    version="0.1.0",
+    version="0.2.0-alpha",
     author="BCH x IA Team",
     author_email="team@bch-ia.org",
     description="Bitcoin Cash payment client for AI agents",
