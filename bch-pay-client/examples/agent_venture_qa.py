@@ -78,12 +78,14 @@ class TestResult:
 class QAAgent:
     """Agente que ejecuta batería de pruebas en bch-pay-client."""
 
-    def __init__(self, backend: str, network: str, storage_path: str = None):
+    def __init__(self, backend: str, network: str, storage_path: str = None, real_send_addr: str = None, real_send_amount: float = None):
         self.backend = backend
         self.network = network
         self.storage_path = storage_path or f".qa_test_{uuid.uuid4().hex[:8]}.json"
         self.results: List[TestResult] = []
         self.pay = None
+        self.real_send_addr = real_send_addr
+        self.real_send_amount = real_send_amount
 
     def log(self, msg: str):
         print(f"[QA] {msg}")
@@ -269,12 +271,43 @@ class QAAgent:
         # En demo, siempre falla
         assert result["success"] is False
 
+    def test_venture_real_send(self):
+        """Venture: Envío REAL de BCH (⚠️ SOLO MAINNET CON FONDOS)."""
+        if not self.real_send_addr or not self.real_send_amount:
+            raise RuntimeError("Real send configurado pero falta dirección o monto")
+        
+        self.log(f"INICIANDO ENVÍO REAL: {self.real_send_amount} BCH → {self.real_send_addr}")
+        
+        # Confirmación adicional
+        print("\n" + "="*60)
+        print("⚠️  ADVERTENCIA: ENVÍO REAL EN MAINNET")
+        print("="*60)
+        print(f"Destinatario: {self.real_send_addr}")
+        print(f"Monto:        {self.real_send_amount:.8f} BCH")
+        print("="*60)
+        confirm = input("Para CONFIRMAR este envío, escribe la palabra 'REAL': ")
+        if confirm != "REAL":
+            raise RuntimeError("Envío cancelado por el usuario")
+        
+        # Ejecutar envío
+        result = self.pay.send_payment(
+            address=self.real_send_addr,
+            amount=self.real_send_amount
+        )
+        
+        if not result.get("success"):
+            raise RuntimeError(f"Envio falló: {result.get('error', 'Unknown error')}")
+        
+        self.log(f"✅ Envío exitoso! TXID: {result.get('txid', 'N/A')}")
+
     # ==================== EJECUCION ====================
 
     def run_all_tests(self):
         """Ejecuta todas las categorías de prueba."""
         self.log("="*60)
         self.log(f"INICIANDO QA SUITE: backend={self.backend}, network={self.network}")
+        if self.real_send_addr and self.real_send_amount:
+            self.log(f"⚠️  ENVÍO REAL ACTIVADO: {self.real_send_amount} BCH a {self.real_send_addr}")
         self.log("="*60)
 
         self.setup()
@@ -296,6 +329,10 @@ class QAAgent:
             (TestCategory.VENTURE, self.test_venture_token_operations),
             (TestCategory.VENTURE, self.test_venture_send_payment_not_implemented),
         ]
+        
+        # Añadir prueba de envío real si se configuró
+        if self.real_send_addr and self.real_send_amount:
+            tests.append((TestCategory.VENTURE, self.test_venture_real_send))
 
         total = len(tests)
         passed = 0
@@ -355,9 +392,34 @@ def main():
     parser.add_argument("--network", choices=["testnet", "mainnet"], default="testnet", help="Red BCH")
     parser.add_argument("--report", choices=["text", "json", "markdown"], default="text", help="Formato reporte")
     parser.add_argument("--output", type=str, help="Archivo de salida para el reporte (opcional)")
+    parser.add_argument("--real-send", action="store_true", help="⚠️  Realiza un envío REAL de BCH (solo con Paytaca mainnet)")
+    parser.add_argument("--address", type=str, help="Dirección destino para envío real (solo con --real-send)")
+    parser.add_argument("--amount", type=float, help="Monto a enviar (solo con --real-send)")
     args = parser.parse_args()
 
-    agent = QAAgent(backend=args.backend, network=args.network)
+    # Validaciones de real-send
+    real_send_addr = None
+    real_send_amount = None
+    if args.real_send:
+        if args.backend != 'paytaca':
+            print("❌ --real-send solo funciona con --backend paytaca")
+            sys.exit(1)
+        if args.network != 'mainnet':
+            print("❌ --real-send solo funciona en --network mainnet")
+            sys.exit(1)
+        if not args.address or not args.amount:
+            print("❌ --real-send requiere --address y --amount")
+            sys.exit(1)
+        real_send_addr = args.address
+        real_send_amount = args.amount
+
+    agent = QAAgent(
+        backend=args.backend,
+        network=args.network,
+        real_send_addr=real_send_addr,
+        real_send_amount=real_send_amount
+    )
+    
     results = agent.run_all_tests()
     report = agent.generate_report(format=args.report)
 

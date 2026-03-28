@@ -97,6 +97,10 @@ Incluimos agentes funcionando en `/examples/`:
 | **QA Venture** | Suite completa de pruebas automatizadas (12 categorías) | `python examples/agent_venture_qa.py --backend demo --report markdown` |
 | **Send Mainnet** | Enviar BCH en mainnet via Paytaca (manual seguro) | `python examples/send_mainnet.py --amount 0.00242019 --address bitcoincash:qz...` |
 
+---
+
+**⚠️ ADVERTENCIA**: El envío real en mainnet es irreversible. Solo usa wallets de prueba con fondos que no importe perder.
+
 Todos los agentes son **autónomos**: pueden ejecutarse como servicios independientes, gestionando sus propios wallets, facturas y verificación de pagos.
 
 > 💡 **Consejo**: Empieza con `agent_api.py` o `agent_cli.py` para entender el flujo, luego adapta a tu caso.

@@ -16,6 +16,14 @@ python examples/agent_venture_qa.py --report json --output qa_results.json
 
 # Reporte en Markdown (para GitHub/GitLab)
 python examples/agent_venture_qa.py --report markdown --output qa_report.md
+
+# ⚠️  Envío REAL en mainnet (solo pruebas, wallet de testing!)
+python examples/agent_venture_qa.py \
+  --backend paytaca \
+  --network mainnet \
+  --real-send \
+  --address bitcoincash:qz8983kqe0pwccwg3urj462mlzrm02q4vc3z22j9w4 \
+  --amount 0.00242019
 ```
 
 ## Categorías de prueba
@@ -119,6 +127,7 @@ tests.append(("Custom", self.test_custom_feature))
 - **Demo backend**: las pruebas de token devuelven 0 (esperado)
 - **Paytaca backend**: puede fallar si no hay nodos disponibles o CLI no instalado
 - **Concurrencia**: las pruebas son secuenciales (no se prueba race conditions reales)
+- **Real send**: La prueba `--real-send` solo funciona en mainnet con Paytaca y requiere fondos. Se pide confirmación manual escribiendo "REAL" para evitar envíos accidentales.
 
 ## Troubleshooting
 
