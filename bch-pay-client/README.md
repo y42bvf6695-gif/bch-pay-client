@@ -81,7 +81,7 @@ Incluimos agentes funcionando en `/examples/`:
 | **API REST** | Servidor FastAPI con endpoints `/invoices`, `/check`, `/balance` | `python examples/agent_api.py` |
 | **Discord Bot** | Comandos `!invoice <amount>`, `!check <id>` | `DISCORD_BOT_TOKEN=... python examples/agent_discord.py` |
 | **Telegram Bot** | Comandos `/invoice`, `/check` | `TELEGRAM_BOT_TOKEN=... python examples/agent_telegram.py` |
-| **CLI** | Interfaz de línea de comandos interactiva | `bchpay-cli` (tras instalación) |
+| **CLI** | Interfaz de línea de comandos interactiva | `python examples/agent_cli.py` o `python -m bch_pay_client.examples.agent_cli` |
 | **Hybrid** | API + Discord + Telegram simultáneo | `python examples/agent_hybrid.py` |
 | **Fine-tuning** | Servicio de fine-tuning pagado | `python examples/agent_finetune.py` |
 | **Dataset Marketplace** | Venta de datasets | `python examples/agent_dataset_marketplace.py` |

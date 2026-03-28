@@ -66,12 +66,8 @@ setup(
     python_requires=">=3.9",
     install_requires=install_requires,
     extras_require=extras_require,
-    entry_points={
-        "console_scripts": [
-            "bchpay-cli=examples.agent_cli:main",
-            "bchpay-agent=examples.agent_hybrid:main",
-        ],
-    },
+    # entry_points no están activos porque examples está excluido
+    # Se ejecutan directamente: python examples/agent_*.py
     include_package_data=True,
     license="MIT",
 )
