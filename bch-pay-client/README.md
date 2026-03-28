@@ -15,6 +15,7 @@ Librería Python minimalista para aceptar pagos en Bitcoin Cash (BCH) en agentes
 🌐 Compatible con cualquier framework (FastAPI, Flask, Discord.py, Telegram)
 🤖 Agentes preconstruidos listos para ejecutar
 🛡️ Modo demo para pruebas sin wallet real
+⚙️ Backends intercambiables: demo, paytaca, watchtower
 ```
 
 ## 🚀 Quickstart
@@ -139,6 +140,53 @@ invoice = pay.create_invoice(
 # Los fondos se acumulan en el storage local
 total_earned = pay.total_earned()
 print(f"💰 Has ganado: {total_earned} BCH")
+```
+
+---
+
+## 🔌 Backends de Producción
+
+Por defecto, `bch-pay-client` usa el **backend demo** (simulación automática). Para pagos reales en mainnet o chipnet, selecciona un backend de producción:
+
+### Paytaca Backend
+
+**Ventajas:** Sin nodo propio, wallet segura en keychain, soporte CashTokens.
+
+**Requisitos:**
+- Node.js 20+
+- `npm install -g paytaca-cli`
+- Wallet creada: `paytaca wallet create` (o `import`)
+
+**Uso:**
+
+```python
+from bch_pay_client import BCHPay
+
+pay = BCHPay(
+    backend='paytaca',
+    network='testnet',  # o 'mainnet'
+    paytaca_cli='paytaca'  # opcional, ruta personalizada
+)
+```
+
+**Variables de entorno:**
+- `BCH_BACKEND=paytaca` - Fuerza uso de Paytaca
+- `PAYTACA_CLI=/ruta/personalizada/paytaca`
+
+### Watchtower Backend (próximamente)
+
+Backend directo vía API REST (sin Node.js). Usará `watchtower-cash-py` o httpx.
+
+### Hybrid Mode
+
+```python
+# Auto-detecta: si paytaca está instalado, lo usa; si no, demo
+pay = BCHPay()  # autodetect
+```
+
+Puedes forzar el backend demo:
+```python
+pay = BCHPay(backend='demo')
 ```
 
 ---

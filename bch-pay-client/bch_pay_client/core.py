@@ -1,79 +1,115 @@
+"""
+BCHPay - Bitcoin Cash payment client for AI agents.
+
+This module provides the main BCHPay class that orchestrates payment operations
+through a pluggable backend system (demo, paytaca, watchtower, etc.).
+"""
+
 import json
 import uuid
 import time
-from dataclasses import dataclass, asdict
-from typing import Optional, Dict, Any
 from pathlib import Path
-import requests
+from typing import Optional, Dict, Any
 
-from .exceptions import BCHPayError, InsufficientAmount, InvalidAddress
-
-
-@dataclass
-class Invoice:
-    """Representa una factura de pago en BCH."""
-    id: str
-    amount: float  # en BCH
-    description: str
-    address: str
-    created_at: float
-    paid: bool = False
-    paid_at: Optional[float] = None
-    txid: Optional[str] = None
-    confirmations: int = 0
-    metadata: Optional[Dict[str, Any]] = None
-
-    def to_dict(self) -> Dict[str, Any]:
-        return asdict(self)
-
-
-@dataclass
-class Payment:
-    """Representa un pago recibido."""
-    invoice_id: str
-    amount: float
-    txid: str
-    confirmations: int
-    timestamp: float
+from .exceptions import BCHPayError, InsufficientAmount
+from .backends import BCHBackend, DemoBackend, Invoice, PaytacaBackend
 
 
 class BCHPay:
     """
-    Cliente para pagos Bitcoin Cash.
+    Cliente para pagos Bitcoin Cash con backend configurable.
 
     Attributes:
-        storage_path: Ruta al archivo JSON de almacenamiento local (por defecto: ~/.bch_pay.json)
+        storage_path: Ruta al archivo JSON de almacenamiento local
         network: Red de BCH ('mainnet' o 'testnet')
-        explorer_url: URL del explorador de bloques para verificar transacciones
+        backend: Instancia del backend activo (DemoBackend, PaytacaBackend, etc.)
+        explorer_url: URL del explorador de bloques (para get_payment_url)
     """
 
     def __init__(
         self,
         storage_path: Optional[str] = None,
         network: str = "mainnet",
-        bch_node_url: Optional[str] = None,
+        backend: Optional[str] = None,
+        paytaca_cli: str = "paytaca",
+        bch_node_url: Optional[str] = None,  # kept for compatibility
         explorer_url: Optional[str] = None,
+        **backend_kwargs
     ):
         """
         Inicializa el cliente BCHPay.
 
         Args:
-            storage_path: Ruta personalizada para almacenamiento local
+            storage_path: Ruta personalizada para almacenamiento local de facturas
             network: 'mainnet' o 'testnet'
-            bch_node_url: URL de un nodo BCH JSON-RPC (opcional, para verificación real)
-            explorer_url: URL base del explorador de bloques (ej: https://explorer.bitcoin.com/bch)
+            backend: Backend a usar ('demo', 'paytaca', 'watchtower'). Si None, se autodetecta.
+            paytaca_cli: Ruta al ejecutable de paytaca (solo para backend='paytaca')
+            bch_node_url: (Deprecated) URL de nodo BCH JSON-RPC - no usado actualmente
+            explorer_url: URL base del explorador de bloques (para get_payment_url)
+            **backend_kwargs: Argumentos adicionales para el backend
+
+        Backend Selection:
+        - 'demo': Simulación local (default si no hay paytaca instalado)
+        - 'paytaca': Usa Paytaca CLI (requiere Node.js + paytaca-cli)
+        - 'watchtower': Usa Watchtower.cash API directa (próximamente)
+
+        Environment Variables:
+        - BCH_BACKEND: Fuerza backend específico
+        - PAYTACA_CLI: Ruta personalizada a paytaca
         """
         self.network = network
         self.storage_path = Path(storage_path or Path.home() / ".bch_pay.json")
-        self.bch_node_url = bch_node_url
+        self.bch_node_url = bch_node_url  # kept for backwards compatibility
         self.explorer_url = explorer_url or {
             "mainnet": "https://explorer.bitcoin.com/bch",
             "testnet": "https://explorer.bitcoin.com/testnet"
         }.get(network, "https://explorer.bitcoin.com/bch")
 
-        # Cargar datos existentes
+        # Local invoice cache
         self._invoices: Dict[str, Dict[str, Any]] = {}
+
+        # Select backend
+        backend = backend or self._autodetect_backend()
+        self.backend = self._create_backend(
+            backend,
+            paytaca_cli=paytaca_cli,
+            network=network,
+            storage_path=str(self.storage_path),
+            **backend_kwargs
+        )
+
+        # Load local invoice cache (works across backends)
         self._load()
+
+    def _autodetect_backend(self) -> str:
+        """Auto-detect available backend."""
+        import shutil
+        if shutil.which("paytaca") is not None:
+            return "paytaca"
+        return "demo"
+
+    def _create_backend(
+        self,
+        backend_name: str,
+        **kwargs
+    ) -> BCHBackend:
+        """Instantiate the selected backend."""
+        if backend_name == "demo":
+            return DemoBackend(
+                storage_path=kwargs.get("storage_path"),
+                network=kwargs.get("network", "mainnet")
+            )
+        elif backend_name == "paytaca":
+            return PaytacaBackend(
+                paytaca_cli=kwargs.get("paytaca_cli", "paytaca"),
+                network=kwargs.get("network", "mainnet"),
+                storage_path=kwargs.get("storage_path")
+            )
+        elif backend_name == "watchtower":
+            # Placeholder for future implementation
+            raise NotImplementedError("Watchtower backend not yet implemented")
+        else:
+            raise ValueError(f"Unknown backend: {backend_name}. Use 'demo' or 'paytaca'")
 
     def _load(self) -> None:
         """Carga las facturas desde el almacenamiento local."""
@@ -81,7 +117,7 @@ class BCHPay:
             try:
                 with open(self.storage_path, 'r') as f:
                     self._invoices = json.load(f)
-            except json.JSONDecodeError:
+            except (json.JSONDecodeError, IOError):
                 self._invoices = {}
 
     def _save(self) -> None:
@@ -89,25 +125,6 @@ class BCHPay:
         self.storage_path.parent.mkdir(parents=True, exist_ok=True)
         with open(self.storage_path, 'w') as f:
             json.dump(self._invoices, f, indent=2)
-
-    def _generate_address(self) -> str:
-        """
-        Genera una dirección BCH.
-
-        En un entorno real, esto debería conectar con un wallet real.
-        Por ahora, genera direcciones de testnet válidas en formato CashAddr para pruebas.
-        """
-        # Generar una dirección de testnet válida (comienza con 'bchtest:')
-        # Esto es SOLO para demostración. En producción, usa un wallet real.
-        import random
-        prefix = "bchtest:" if self.network == "testnet" else "bitcoincash:"
-        random_part = ''.join(random.choices('0123456789abcdefghijklmnopqrstuvwxyz', k=70))
-        return f"{prefix}{random_part}"
-
-    def _is_valid_bch_address(self, address: str) -> bool:
-        """Validación básica de dirección BCH."""
-        # Chequeo simple: debe comenzar con bitcoincash: o bchtest:
-        return address.startswith(("bitcoincash:", "bchtest:"))
 
     def create_invoice(
         self,
@@ -127,34 +144,41 @@ class BCHPay:
             Invoice: Objeto de factura creada
 
         Raises:
-            InsufficientAmount: Si el monto es menor o igual a 0
+            BCHPayError: Si el monto es inválido o falla el backend
         """
         if amount <= 0:
             raise InsufficientAmount("El monto debe ser mayor a 0")
 
-        invoice_id = str(uuid.uuid4())
-        address = self._generate_address()
+        try:
+            invoice = self.backend.create_invoice(amount, description, metadata)
 
-        invoice = Invoice(
-            id=invoice_id,
-            amount=amount,
-            description=description,
-            address=address,
-            created_at=time.time(),
-            metadata=metadata or {}
-        )
+            # Cache invoice locally (backend might not store all metadata)
+            self._invoices[invoice.id] = invoice.to_dict()
+            self._save()
 
-        self._invoices[invoice_id] = invoice.to_dict()
-        self._save()
-
-        return invoice
+            return invoice
+        except Exception as e:
+            raise BCHPayError(f"Failed to create invoice: {str(e)}")
 
     def get_invoice(self, invoice_id: str) -> Optional[Invoice]:
-        """Obtiene una factura por su ID."""
+        """
+        Obtiene una factura por su ID.
+
+        First checks local cache, falls back to backend if needed.
+        """
+        # Try local cache first
         data = self._invoices.get(invoice_id)
         if data:
             return Invoice(**data)
-        return None
+
+        # Backend might have it even if not in local cache
+        invoice = self.backend.get_invoice(invoice_id)
+        if invoice:
+            # Update local cache
+            self._invoices[invoice_id] = invoice.to_dict()
+            self._save()
+
+        return invoice
 
     def check_payment(self, invoice_id: str) -> bool:
         """
@@ -166,9 +190,8 @@ class BCHPay:
         Returns:
             bool: True si está pagada con al menos 1 confirmación
 
-        Note:
-            En modo demo, esto simula verificación.
-            Para verificación real, configura `bch_node_url`.
+        Raises:
+            BCHPayError: Si falla la verificación en el backend
         """
         invoice = self.get_invoice(invoice_id)
         if not invoice:
@@ -177,51 +200,84 @@ class BCHPay:
         if invoice.paid:
             return True
 
-        # Si se proporcionó un nodo BCH, consultar transacciones reales
-        if self.bch_node_url:
-            return self._check_payment_real(invoice)
-
-        # Modo demo: simular verificación
-        return self._check_payment_demo(invoice)
-
-    def _check_payment_real(self, invoice: Invoice) -> bool:
-        """Consulta el nodo BCH para verificar transacciones."""
         try:
-            # Aquí implementarías la llamada JSON-RPC a tu nodo
-            # Ejemplo conceptual:
-            # response = requests.post(self.bch_node_url, json={
-            #     "method": "getaddressinfo",
-            #     "params": [invoice.address]
-            # })
-            # Verificar si hay UTXOs no gastados que sumen >= invoice.amount
-            pass
-        except Exception:
-            return False
-        return False
+            is_paid = self.backend.check_payment(invoice_id)
+            if is_paid:
+                # Update local cache
+                updated = self.backend.get_invoice(invoice_id)
+                if updated and updated.paid:
+                    self._invoices[invoice_id] = updated.to_dict()
+                    self._save()
+            return is_paid
+        except Exception as e:
+            raise BCHPayError(f"Failed to check payment: {str(e)}")
 
-    def _check_payment_demo(self, invoice: Invoice) -> bool:
+    def get_balance(self) -> float:
         """
-        Simulación de verificación de pago.
-        Para pruebas: automáticamente marca como pagada después de 5 segundos.
+        Obtiene el balance del wallet (backend dependiente).
+
+        Para demo backend: calcula desde facturas pagadas.
+        Para paytaca backend: consulta el wallet real.
         """
-        # En un demo, podrías simular que el pago arrive después de un tiempo
-        if not invoice.paid and (time.time() - invoice.created_at) > 5:
-            invoice.paid = True
-            invoice.paid_at = time.time()
-            invoice.txid = f"demo-tx-{uuid.uuid4().hex[:16]}"
-            invoice.confirmations = 1
-            self._invoices[invoice.id] = invoice.to_dict()
-            self._save()
-            return True
-        return False
+        try:
+            return self.backend.get_balance()
+        except Exception as e:
+            raise BCHPayError(f"Failed to get balance: {str(e)}")
+
+    def list_invoices(self, limit: int = 100) -> list[Invoice]:
+        """Lista todas las facturas (últimas primero)."""
+        try:
+            # Prefer backend list (it may have invoices not in local cache)
+            invoices = self.backend.list_invoices(limit=limit)
+
+            # Merge with local (more complete metadata)
+            local_invoices = [
+                Invoice(**data) for data in self._invoices.values()
+            ]
+            # Combine and dedupe by ID (prefer backend data if paid status differs)
+            combined = {}
+            for inv in invoices + local_invoices:
+                combined[inv.id] = inv
+
+            return sorted(combined.values(), key=lambda x: x.created_at, reverse=True)[:limit]
+        except Exception as e:
+            raise BCHPayError(f"Failed to list invoices: {str(e)}")
+
+    def total_earned(self) -> float:
+        """Retorna el total de BCH recibidos (desde facturas pagadas)."""
+        return sum(
+            inv.amount for inv in self.list_invoices()
+            if inv.paid
+        )
+
+    def send_payment(
+        self,
+        address: str,
+        amount: float,
+        token_category: Optional[str] = None
+    ) -> Dict[str, Any]:
+        """
+        Envía un pago (BCH o CashToken).
+
+        Args:
+            address: Dirección destinatario
+            amount: Cantidad
+            token_category: ID de categoría token (si es token payment)
+
+        Returns:
+            dict con keys: success (bool), txid (str, opcional), error (str, opcional)
+        """
+        try:
+            return self.backend.send_payment(address, amount, token_category)
+        except Exception as e:
+            return {"success": False, "error": str(e)}
 
     def get_payment_url(self, invoice_id: str) -> str:
-        """Genera URL de pago (para redirigir al usuario)."""
+        """Genera URL de pago (requiere explorer_url configurado)."""
         invoice = self.get_invoice(invoice_id)
         if not invoice:
             raise BCHPayError("Factura no encontrada")
 
-        # En producción, esto sería el URL de tu checkout o dirección directa
         return f"{self.explorer_url}/address/{invoice.address}"
 
     def generate_qr(self, invoice_id: str, size: int = 300) -> bytes:
@@ -234,6 +290,9 @@ class BCHPay:
 
         Returns:
             bytes: Imagen PNG en bytes
+
+        Raises:
+            BCHPayError: Si no se encuentra la factura o falta qrcode
         """
         invoice = self.get_invoice(invoice_id)
         if not invoice:
@@ -260,18 +319,3 @@ class BCHPay:
         buffer = BytesIO()
         img.save(buffer, format="PNG")
         return buffer.getvalue()
-
-    def list_invoices(self, limit: int = 100) -> list[Invoice]:
-        """Lista todas las facturas (últimas primero)."""
-        invoices = [
-            Invoice(**data)
-            for data in self._invoices.values()
-        ]
-        return sorted(invoices, key=lambda x: x.created_at, reverse=True)[:limit]
-
-    def total_earned(self) -> float:
-        """Retorna el total de BCH recibidos."""
-        return sum(
-            inv.amount for inv in self.list_invoices()
-            if inv.paid
-        )
