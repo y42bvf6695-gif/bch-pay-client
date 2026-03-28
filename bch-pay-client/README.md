@@ -148,9 +148,11 @@ print(f"💰 Has ganado: {total_earned} BCH")
 
 Por defecto, `bch-pay-client` usa el **backend demo** (simulación automática). Para pagos reales en mainnet o chipnet, selecciona un backend de producción:
 
-### Paytaca Backend
+### Paytaca Backend (Experimental)
 
 **Ventajas:** Sin nodo propio, wallet segura en keychain, soporte CashTokens.
+
+**⚠️ Estado Experimental:** Este backend es unwrapper alrededor de `paytaca-cli` y requiere que la CLI soporte salida JSON (actualmente en desarrollo). No se recomienda para producción hasta que se estabilice.
 
 **Requisitos:**
 - Node.js 20+
@@ -172,6 +174,8 @@ pay = BCHPay(
 **Variables de entorno:**
 - `BCH_BACKEND=paytaca` - Fuerza uso de Paytaca
 - `PAYTACA_CLI=/ruta/personalizada/paytaca`
+
+**Nota:** Si `paytaca` no está instalado, `BCHPay()` auto-selecciona el backend `demo`. Para producción estable, se recomienda esperar al backend `watchtower` (API directa) o integrar tu propio nodo BCH.
 
 ### Watchtower Backend (próximamente)
 
