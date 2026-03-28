@@ -95,6 +95,7 @@ Incluimos agentes funcionando en `/examples/`:
 | **LLM API** | API compatible OpenAI con balance prepago | `python examples/agent_llm_api.py` |
 | **Stablecoin (MUSD)** | Pagos en USD estables via CashToken | `python examples/agent_token_demo.py` |
 | **QA Venture** | Suite completa de pruebas automatizadas (12 categorías) | `python examples/agent_venture_qa.py --backend demo --report markdown` |
+| **Send Mainnet** | Enviar BCH en mainnet via Paytaca (manual seguro) | `python examples/send_mainnet.py --amount 0.00242019 --address bitcoincash:qz...` |
 
 Todos los agentes son **autónomos**: pueden ejecutarse como servicios independientes, gestionando sus propios wallets, facturas y verificación de pagos.
 
@@ -109,6 +110,7 @@ Todos los agentes son **autónomos**: pueden ejecutarse como servicios independi
 - [Integration Guides](docs/) - FastAPI, Discord, Telegram, Webhooks
 - [CashToken Support](docs/tokens.md) - Guía completa de tokens (MUSD, SLP)
 - [QA & Testing](docs/qa.md) - Suite de pruebas automatizadas (Venture Agent)
+- [Sending Mainnet](docs/send-mainnet.md) - Script seguro para envíos BCH en mainnet
 - [Troubleshooting](docs/troubleshooting.md) - Soluciones comunes
 - [Contributing](CONTRIBUTING.md) - Cómo contribuir, badges, code of conduct
 - [Roadmap](ROADMAP.md) - Lo que viene
